@@ -21,40 +21,41 @@ class BlocksPuzzleApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData.light(),
       home: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              "Blocks Puzzle",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          floatingActionButton: FloatingActionButton(
+        /* floatingActionButton: FloatingActionButton(
             child: Text("Play"),
             onPressed: () {
               gameTimer.start();
             },
-          ),
+          ),*/
           body: _buildGameWidget()),
     );
   }
 
   Widget _buildGameWidget() {
     return Container(
-        color: Colors.black87,
-        /*child: Container(child:Row(
-            children: [_buildTopSection(),_buildGameBoard(),_buildBottomSection()],
+      padding: EdgeInsets.only(top: 20.0),
+      color: Colors.black87,
+      child: Column(
+        children: <Widget>[
+          Expanded(
+            flex: 1,
+            child: Container(
+              child: _buildTopSection(),
+            ),
           ),
-       ));*/
-        child: Flex(direction: Axis.vertical, children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [_buildTopSection()],
+          Expanded(
+            flex: 3,
+            child: Container(
+              child: _buildGameBoard(),
+            ),
           ),
-          Flexible(
-            fit: FlexFit.loose,
-            child: _buildGameBoard(),
-          ),
-          _buildBottomSection(),
-        ]));
+          Expanded(
+            flex: 1,
+            child: Container(child: _buildBottomSection()),
+          )
+        ],
+      ),
+    );
   }
 
   GameBoard gameBoard;
@@ -71,14 +72,39 @@ class BlocksPuzzleApp extends StatelessWidget {
       gameTimer = GameTimer();
     }
     return Container(
+      alignment: Alignment.center,
+      margin: EdgeInsets.all(20.0),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            flex: 1,
+            child: Container(
+              child: gameTimer,
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+            ),
+          )
+        ],
+      ),
+    );
+    /*   return Container(
         margin: const EdgeInsets.all(20.0),
+        alignment: Alignment.center,
         child: Row(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             gameTimer,
           ],
-        ));
+        ));*/
 
     //TODO:Build Scoreboard
   }
@@ -96,7 +122,7 @@ class BlocksPuzzleApp extends StatelessWidget {
 
   void onBlockDropped(
       BlockType blockType, Color blockColor, Offset blockPosition) {
-    gameBoard.onBlockDropped(blockType, blockColor, blockPosition);
+    gameBoard?.onBlockDropped(blockType, blockColor, blockPosition);
   }
 
   void onBlockPlaced(BlockType blockType) {

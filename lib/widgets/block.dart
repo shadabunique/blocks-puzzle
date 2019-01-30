@@ -84,12 +84,12 @@ class _BlockState extends State<Block> {
         break;
       case BlockType.DOUBLE:
       case BlockType.SQUARE:
+      case BlockType.TYPE_L:
+      case BlockType.MIRRORED_L:
         width = width * 2;
         break;
       case BlockType.LINE_HORIZONTAL:
       case BlockType.TYPE_T:
-      case BlockType.TYPE_L:
-      case BlockType.MIRRORED_L:
       case BlockType.TYPE_Z:
       case BlockType.TYPE_S:
         width = width * 3;

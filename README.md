@@ -1,3 +1,3 @@
-# blocks_puzzle
+# Blocks Puzzle
 
-Application demonstrating the use of Drag widget
+A Flutter based game demonstrating the use of different widgets e.g Draggable

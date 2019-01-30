@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 
 const double blockUnitSizeWithPadding = blockUnitSize + 2.0;
 const double margin = 8.0;
+const Color emptyCellColor = Colors.white70;
 
 typedef BlockPlacedCallback = void Function(BlockType blockType);
 
@@ -54,7 +55,7 @@ class _GameBoardState extends State<GameBoard> {
     //Step 2: Add a new draggable block at the bottom
     //Step 3: Uncolor the filled lines horizontally and vertically
     //Step 4: Check if any of the stacked draggable blocks can be fit on the grid. if not finish the game
-    int numOfChildBlocks = getNumberofChildBlocks(blockType);
+    int numOfChildBlocks = getUnitBlocksCount(blockType);
     computeFillableGridBlockPositions(
         numOfChildBlocks, blockType, blockPosition);
 
@@ -67,16 +68,16 @@ class _GameBoardState extends State<GameBoard> {
         _blockPlacedCallback(blockType);
       }
       setState(() {});
-      Future.delayed(const Duration(milliseconds: 600), clearFlledRows);
+      Future.delayed(const Duration(milliseconds: 600), clearFilledRows);
     }
   }
 
-  void clearFlledRows() {
+  void clearFilledRows() {
     findHorizontallyFilledRows();
     findVerticallyFilledRows();
     if (cellsToClear.isNotEmpty) {
       for (int counter in cellsToClear) {
-        cellColorsList[counter] = Colors.white70;
+        cellColorsList[counter] = emptyCellColor;
       }
       cellsToClear.clear();
       setState(() {});
@@ -90,7 +91,7 @@ class _GameBoardState extends State<GameBoard> {
       tempList.clear();
       matchedRow = row;
       for (int col = 0; col < numOfColumns; col++) {
-        if (cellColorsList[col + row * numOfColumns] == Colors.white70) {
+        if (cellColorsList[col + row * numOfColumns] == emptyCellColor) {
           matchedRow = -1;
           tempList.clear();
           break;
@@ -112,7 +113,7 @@ class _GameBoardState extends State<GameBoard> {
       for (int col = row;
           col < numOfColumns * numOfColumns;
           col += numOfColumns) {
-        if (cellColorsList[col] == Colors.white70) {
+        if (cellColorsList[col] == emptyCellColor) {
           matchedRow = -1;
           tempList.clear();
           break;
@@ -130,7 +131,7 @@ class _GameBoardState extends State<GameBoard> {
     Rect gridBlockRectangle;
 
     List<Rect> droppedBlockRects =
-        getDroppedBlockRects(blockType, droppedBlockPosition);
+    getDroppedBlocks(blockType, droppedBlockPosition);
 
     for (Rect droppedBlockRect in droppedBlockRects) {
       double maxIntersection = 0.0;
@@ -155,7 +156,7 @@ class _GameBoardState extends State<GameBoard> {
         }
       }
       if (matchedIndex >= 0 &&
-          cellColorsList[matchedIndex] == Colors.white70 &&
+          cellColorsList[matchedIndex] == emptyCellColor &&
           !cellsToFill.contains(matchedIndex)) {
         cellsToFill.add(matchedIndex);
       }
@@ -168,7 +169,7 @@ class _GameBoardState extends State<GameBoard> {
       double screenWidth = MediaQuery.of(context).size.width;
       numOfColumns = (screenWidth - margin * 4) ~/ blockUnitSizeWithPadding;
       for (int i = 0; i < numOfColumns * numOfColumns; i++) {
-        cellColorsList.add(Colors.white70);
+        cellColorsList.add(emptyCellColor);
       }
     }
     cells.clear();
@@ -184,11 +185,11 @@ class _GameBoardState extends State<GameBoard> {
         height: numOfColumns * blockUnitSizeWithPadding,
         margin: EdgeInsets.all(margin),
         child: Table(
-          children: _createRows(),
+          children: _createGridCells(),
         ));
   }
 
-  List<TableRow> _createRows() {
+  List<TableRow> _createGridCells() {
     List<TableRow> rows = <TableRow>[];
     for (int row = 0; row < numOfColumns; row++) {
       rows.add(TableRow(children: [
@@ -209,7 +210,7 @@ class _GameBoardState extends State<GameBoard> {
     return row;
   }
 
-  int getNumberofChildBlocks(BlockType blockType) {
+  int getUnitBlocksCount(BlockType blockType) {
     switch (blockType) {
       case BlockType.SINGLE:
         return 1;
@@ -231,177 +232,179 @@ class _GameBoardState extends State<GameBoard> {
         return 4;
       case BlockType.TYPE_S:
         return 4;
+      default:
+        return 0;
     }
   }
 
-  List<Rect> getDroppedBlockRects(
+  List<Rect> getDroppedBlocks(
       BlockType blockType, Offset droppedBlockPosition) {
-    List<Rect> rects = <Rect>[];
+    List<Rect> droppedBlocks = <Rect>[];
     RenderBox getBox = context.findRenderObject();
     droppedBlockPosition =
         getBox.globalToLocal(droppedBlockPosition) - Offset(margin, margin);
     switch (blockType) {
       case BlockType.SINGLE:
-        rects.add(Rect.fromLTWH(droppedBlockPosition.dx,
+        droppedBlocks.add(Rect.fromLTWH(droppedBlockPosition.dx,
             droppedBlockPosition.dy, blockUnitSize, blockUnitSize));
         break;
       case BlockType.DOUBLE:
-        rects.add(Rect.fromLTWH(droppedBlockPosition.dx,
+        droppedBlocks.add(Rect.fromLTWH(droppedBlockPosition.dx,
             droppedBlockPosition.dy, blockUnitSize, blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx + blockUnitSizeWithPadding,
             droppedBlockPosition.dy,
             blockUnitSize,
             blockUnitSize));
         break;
       case BlockType.LINE_HORIZONTAL:
-        rects.add(Rect.fromLTWH(droppedBlockPosition.dx,
+        droppedBlocks.add(Rect.fromLTWH(droppedBlockPosition.dx,
             droppedBlockPosition.dy, blockUnitSize, blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx + blockUnitSizeWithPadding,
             droppedBlockPosition.dy,
             blockUnitSize,
             blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx + 2 * blockUnitSizeWithPadding,
             droppedBlockPosition.dy,
             blockUnitSize,
             blockUnitSize));
         break;
       case BlockType.LINE_VERTICAL:
-        rects.add(Rect.fromLTWH(droppedBlockPosition.dx,
+        droppedBlocks.add(Rect.fromLTWH(droppedBlockPosition.dx,
             droppedBlockPosition.dy, blockUnitSize, blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx,
             droppedBlockPosition.dy + blockUnitSizeWithPadding,
             blockUnitSize,
             blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx,
             droppedBlockPosition.dy + 2 * blockUnitSizeWithPadding,
             blockUnitSize,
             blockUnitSize));
         break;
       case BlockType.SQUARE:
-        rects.add(Rect.fromLTWH(droppedBlockPosition.dx,
+        droppedBlocks.add(Rect.fromLTWH(droppedBlockPosition.dx,
             droppedBlockPosition.dy, blockUnitSize, blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx + blockUnitSizeWithPadding,
             droppedBlockPosition.dy,
             blockUnitSize,
             blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx,
             droppedBlockPosition.dy + blockUnitSizeWithPadding,
             blockUnitSize,
             blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx + blockUnitSizeWithPadding,
             droppedBlockPosition.dy + blockUnitSizeWithPadding,
             blockUnitSize,
             blockUnitSize));
         break;
       case BlockType.TYPE_T:
-        rects.add(Rect.fromLTWH(droppedBlockPosition.dx,
+        droppedBlocks.add(Rect.fromLTWH(droppedBlockPosition.dx,
             droppedBlockPosition.dy, blockUnitSize, blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx + blockUnitSizeWithPadding,
             droppedBlockPosition.dy,
             blockUnitSize,
             blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx + 2 * blockUnitSizeWithPadding,
             droppedBlockPosition.dy,
             blockUnitSize,
             blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx + blockUnitSizeWithPadding,
             droppedBlockPosition.dy + blockUnitSizeWithPadding,
             blockUnitSize,
             blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx + blockUnitSizeWithPadding,
             droppedBlockPosition.dy + 2 * blockUnitSizeWithPadding,
             blockUnitSize,
             blockUnitSize));
         break;
       case BlockType.TYPE_L:
-        rects.add(Rect.fromLTWH(droppedBlockPosition.dx,
+        droppedBlocks.add(Rect.fromLTWH(droppedBlockPosition.dx,
             droppedBlockPosition.dy, blockUnitSize, blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx,
             droppedBlockPosition.dy + blockUnitSizeWithPadding,
             blockUnitSize,
             blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx,
             droppedBlockPosition.dy + 2 * blockUnitSizeWithPadding,
             blockUnitSize,
             blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx + blockUnitSizeWithPadding,
             droppedBlockPosition.dy + 2 * blockUnitSizeWithPadding,
             blockUnitSize,
             blockUnitSize));
         break;
       case BlockType.MIRRORED_L:
-        rects.add(Rect.fromLTWH(droppedBlockPosition.dx,
+        droppedBlocks.add(Rect.fromLTWH(droppedBlockPosition.dx,
             droppedBlockPosition.dy, blockUnitSize, blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx + blockUnitSizeWithPadding,
             droppedBlockPosition.dy,
             blockUnitSize,
             blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx + blockUnitSizeWithPadding,
             droppedBlockPosition.dy + blockUnitSizeWithPadding,
             blockUnitSize,
             blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx + blockUnitSizeWithPadding,
             droppedBlockPosition.dy + 2 * blockUnitSizeWithPadding,
             blockUnitSize,
             blockUnitSize));
         break;
       case BlockType.TYPE_Z:
-        rects.add(Rect.fromLTWH(droppedBlockPosition.dx,
+        droppedBlocks.add(Rect.fromLTWH(droppedBlockPosition.dx,
             droppedBlockPosition.dy, blockUnitSize, blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx + blockUnitSizeWithPadding,
             droppedBlockPosition.dy,
             blockUnitSize,
             blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx + blockUnitSizeWithPadding,
             droppedBlockPosition.dy + blockUnitSizeWithPadding,
             blockUnitSize,
             blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx + 2 * blockUnitSizeWithPadding,
             droppedBlockPosition.dy + blockUnitSizeWithPadding,
             blockUnitSize,
             blockUnitSize));
         break;
       case BlockType.TYPE_S:
-        rects.add(Rect.fromLTWH(droppedBlockPosition.dx,
+        droppedBlocks.add(Rect.fromLTWH(droppedBlockPosition.dx + blockUnitSize,
             droppedBlockPosition.dy, blockUnitSize, blockUnitSize));
-        rects.add(Rect.fromLTWH(
-            droppedBlockPosition.dx + blockUnitSizeWithPadding,
+        droppedBlocks.add(Rect.fromLTWH(
+            droppedBlockPosition.dx + 2 * blockUnitSizeWithPadding,
             droppedBlockPosition.dy,
             blockUnitSize,
             blockUnitSize));
-        rects.add(Rect.fromLTWH(
+        droppedBlocks.add(Rect.fromLTWH(
             droppedBlockPosition.dx,
             droppedBlockPosition.dy + blockUnitSizeWithPadding,
             blockUnitSize,
             blockUnitSize));
-        rects.add(Rect.fromLTWH(
-            droppedBlockPosition.dx - blockUnitSizeWithPadding,
+        droppedBlocks.add(Rect.fromLTWH(
+            droppedBlockPosition.dx + blockUnitSizeWithPadding,
             droppedBlockPosition.dy + blockUnitSizeWithPadding,
             blockUnitSize,
             blockUnitSize));
         break;
     }
-    return rects;
+    return droppedBlocks;
   }
 }

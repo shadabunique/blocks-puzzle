@@ -120,16 +120,24 @@ class Box extends CustomPainter {
         break;
       case BlockType.TYPE_S:
         var block1 = Rect.fromLTWH(0.0, 0.0, unitSize, unitSize);
-        var block2 =
-            Rect.fromLTWH(block1.right + padding, 0.0, unitSize, unitSize);
+        var block2 = Rect.fromLTWH(
+            block1.right + padding, block1.top, unitSize, unitSize);
+        var block5 = Rect.fromLTWH(
+            block2.right + padding, block2.top, unitSize, unitSize);
         var block3 = Rect.fromLTWH(
             block1.left, block1.bottom + padding, unitSize, unitSize);
-        var block4 = Rect.fromLTWH(block3.left - unitSize - padding,
-            block2.bottom + padding, unitSize, unitSize);
-        canvas.drawRect(block1, blockPaint);
+        var block4 = Rect.fromLTWH(
+            block3.right + padding, block3.top, unitSize, unitSize);
+        var block6 = Rect.fromLTWH(
+            block4.right + padding, block4.top, unitSize, unitSize);
+        canvas.drawRect(block1, Paint()
+          ..color = Colors.transparent);
         canvas.drawRect(block2, blockPaint);
+        canvas.drawRect(block5, blockPaint);
         canvas.drawRect(block3, blockPaint);
         canvas.drawRect(block4, blockPaint);
+        canvas.drawRect(block6, Paint()
+          ..color = Colors.transparent);
         break;
     }
   }

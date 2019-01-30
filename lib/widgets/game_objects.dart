@@ -84,14 +84,27 @@ class _BlocksState extends State<Blocks> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.all(20.0),
-        child: Row(
-          children: [
-            getDraggableBlock(0),
-            getDraggableBlock(1),
-            getDraggableBlock(2),
-          ],
-        ));
+      margin: EdgeInsets.all(20.0),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            flex: 1,
+            child: Container(
+                alignment: Alignment.center, child: draggableBlocks[0]),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+                alignment: Alignment.center, child: draggableBlocks[1]),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+                alignment: Alignment.center, child: draggableBlocks[2]),
+          )
+        ],
+      ),
+    );
   }
 
   void onBlockPlaced(BlockType blockType) {
@@ -111,14 +124,5 @@ class _BlocksState extends State<Blocks> {
     for (int index = 0; index < 3; index++) {
       draggableBlocks.add(availableBlocks[index]);
     }
-  }
-
-  Widget getDraggableBlock(int index) {
-    return Expanded(
-      child: new Container(
-        alignment: Alignment.center,
-        child: draggableBlocks[index],
-      ),
-    );
   }
 }
