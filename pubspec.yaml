@@ -1,5 +1,5 @@
 name: blocks_puzzle
-description: Application demonstrating the use of animations
+description: Application demonstrating the use of widgets and animations
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,10 +19,18 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+  flutter_svg: ^0.10.3
+  firebase_core: ^0.3.0
+  shared_preferences: ^0.5.0
+  json_annotation: ^2.0.0
+  flare_flutter: ^1.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  build_runner: ^1.0.0
+  json_serializable: ^2.0.0
 
 
 # For information on the generic Dart part of this file, see the
@@ -36,10 +44,23 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #  - images/a_dot_burr.jpeg
-  #  - images/a_dot_ham.jpeg
+  assets:
+  - assets/
+  - assets/images/ic_award_cup.svg
+  - assets/images/ic_star.svg
+  - assets/images/ic_like.svg
+  - assets/images/ic_facebook.svg
+  - assets/images/ic_play.svg
+
+  fonts:
+  - family: Fighting Spirit
+    fonts:
+    - asset: fonts/fighting_spirit_bold.ttf
+    - asset: fonts/fighting_spirit.ttf
+
+  - family: HPunk
+    fonts:
+    - asset: fonts/hpunk.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

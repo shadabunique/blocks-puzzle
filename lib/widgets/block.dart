@@ -1,13 +1,10 @@
+import 'package:blocks_puzzle/common/utils.dart';
 import 'package:blocks_puzzle/views/shape_block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-const double blockUnitSize = 35.0;
-
 typedef BlockDroppedCallback = void Function(
     BlockType blockType, Color blockColor, Offset blockPosition);
-
-typedef BlockDragStartedCallback = void Function(BlockType blockType);
 
 class Block extends StatefulWidget {
   final Color color;
@@ -19,17 +16,13 @@ class Block extends StatefulWidget {
 
   Block(this.blockType, this.color,
       {this.blockDroppedCallback,
-      this.draggable = false,
-      this.blockSize = blockUnitSize});
+        this.draggable = false,
+        this.blockSize = blockUnitSize});
 
   @override
   _BlockState createState() {
     _blockState = _BlockState(this.blockDroppedCallback);
     return _blockState;
-  }
-
-  Offset getPosition() {
-    return _blockState?.getPosition();
   }
 }
 
@@ -38,11 +31,6 @@ class _BlockState extends State<Block> {
 
   BlockDroppedCallback _blockDroppedCallback;
   Widget block;
-
-  Offset getPosition() {
-    RenderBox it = context.findRenderObject() as RenderBox;
-    return it.semanticBounds.bottomRight;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +60,8 @@ class _BlockState extends State<Block> {
         width: _getBlockContainerWidth(blockType),
         height: _getBlockContainerHeight(blockType),
         child: CustomPaint(
-          painter: Box(shape: blockType, color: color, unitSize: blockSize),
+          painter: BlockShaper(
+              shape: blockType, color: color, unitSize: blockSize),
         ));
   }
 
@@ -131,5 +120,5 @@ enum BlockType {
   TYPE_L,
   MIRRORED_L,
   TYPE_Z,
-  TYPE_S,
+  TYPE_S
 }

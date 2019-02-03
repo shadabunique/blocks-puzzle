@@ -1,10 +1,9 @@
 import 'dart:math';
 
+import 'package:blocks_puzzle/common/utils.dart';
 import 'package:blocks_puzzle/widgets/block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
-const double draggableBlockSize = 30.0;
 
 class Blocks extends StatefulWidget {
   _BlocksState _blocksState;
@@ -21,6 +20,10 @@ class Blocks extends StatefulWidget {
 
   void onBlockPlaced(BlockType blockType) {
     _blocksState?.onBlockPlaced(blockType);
+  }
+
+  List<Block> getDraggableBlocks() {
+    return _blocksState?.draggableBlocks;
   }
 }
 

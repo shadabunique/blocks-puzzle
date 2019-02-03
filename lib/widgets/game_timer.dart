@@ -20,6 +20,10 @@ class GameTimer extends StatefulWidget {
     _gameTimerState._digitalTimer?.pauseTimer();
   }
 
+  int getTimeDurationInSeconds() {
+    return _gameTimerState._digitalTimer?.getDurationInSeconds();
+  }
+
   @override
   _GameTimerState createState() {
     _gameTimerState = _GameTimerState();
@@ -36,8 +40,7 @@ class _GameTimerState extends State<GameTimer> with WidgetsBindingObserver {
   @override
   void initState() {
     _digitalTimer = DigitalTimer(
-      countDown: true,
-      time: 6,
+      countDown: false,
       timeUpdatedCallback: onTimeUpdated,
       countDownCompleted: onCountDownCompleted,
     );
@@ -72,9 +75,9 @@ class _GameTimerState extends State<GameTimer> with WidgetsBindingObserver {
         getFormattedTime(),
         style: TextStyle(
             color: Colors.green,
-            fontSize: 16.0,
+            fontSize: 24.0,
             fontStyle: FontStyle.normal,
-            fontFamily: 'sans-serif-medium'),
+            fontFamily: 'HPunk'),
       ),
     );
   }
@@ -90,6 +93,5 @@ class _GameTimerState extends State<GameTimer> with WidgetsBindingObserver {
     setState(() {});
   }
 
-  void onCountDownCompleted() {
-  }
+  void onCountDownCompleted() {}
 }

@@ -1,25 +1,27 @@
 import 'dart:math';
 
+import 'package:blocks_puzzle/common/utils.dart';
 import 'package:blocks_puzzle/widgets/block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-const double blockUnitSizeWithPadding = blockUnitSize + 2.0;
 const double margin = 8.0;
-const Color emptyCellColor = Colors.white70;
-
-typedef BlockPlacedCallback = void Function(BlockType blockType);
 
 class GameBoard extends StatefulWidget {
   _GameBoardState _gameBoardState;
 
   final BlockPlacedCallback blockPlacedCallback;
+  final OutOfBlocksCallback outOfBlocksCallback;
+  final RowsClearedCallback rowsClearedCallback;
 
-  GameBoard({this.blockPlacedCallback});
+  GameBoard({this.blockPlacedCallback,
+    this.outOfBlocksCallback,
+    this.rowsClearedCallback});
 
   @override
   _GameBoardState createState() {
-    _gameBoardState = _GameBoardState(this.blockPlacedCallback);
+    _gameBoardState = _GameBoardState(this.blockPlacedCallback,
+        this.outOfBlocksCallback, this.rowsClearedCallback);
     return _gameBoardState;
   }
 
@@ -27,38 +29,62 @@ class GameBoard extends StatefulWidget {
       BlockType blockType, Color blockColor, Offset blockPosition) {
     _gameBoardState?.onBlockDropped(blockType, blockColor, blockPosition);
   }
+
+  void setAvailableDraggableBlocks(List<Block> availableDraggableBlocks) {
+    _gameBoardState?.computeAvailableBlocks(availableDraggableBlocks);
+  }
 }
 
 class _GameBoardState extends State<GameBoard> {
   int numOfColumns;
-  BlockType blockType;
-  Color blockColor;
-  Offset blockPosition;
   List<Block> cells = <Block>[];
   List<Color> cellColorsList = <Color>[];
-  List<int> cellsToFill = <int>[];
   List<int> cellsToClear = <int>[];
+  List<Rect> gridBlockRectangleList;
+  int matchedRows = 0;
 
   final BlockPlacedCallback _blockPlacedCallback;
+  final OutOfBlocksCallback _outOfBlocksCallback;
+  final RowsClearedCallback _rowsClearedCallback;
 
-  _GameBoardState(this._blockPlacedCallback);
+  _GameBoardState(this._blockPlacedCallback, this._outOfBlocksCallback,
+      this._rowsClearedCallback);
+
+  void computeAvailableBlocks(List<Block> availableDraggableBlocks) {
+    bool outOfBlocks = true;
+    for (Block draggableBlock in availableDraggableBlocks) {
+      int numOfChildBlocks = getUnitBlocksCount(draggableBlock.blockType);
+
+      List<int> cellsToFill;
+      for (Rect gridBlockRectangle in gridBlockRectangleList) {
+        cellsToFill = computeFillableGridBlockPositions(numOfChildBlocks,
+            draggableBlock.blockType, gridBlockRectangle.topLeft);
+        if (numOfChildBlocks == cellsToFill.length) {
+          outOfBlocks = false;
+          break;
+        }
+      }
+      if (!outOfBlocks) {
+        break;
+      }
+    }
+
+    if (outOfBlocks && _outOfBlocksCallback != null) {
+      _outOfBlocksCallback();
+    }
+  }
 
   void onBlockDropped(
       BlockType blockType, Color blockColor, Offset blockPosition) {
-    cellsToFill.clear();
     cellsToClear.clear();
-    this.blockType = blockType;
-    this.blockColor = blockColor;
-    this.blockPosition = blockPosition;
 
-    //Step 1: Find the grid block positions and place the dropped block if possible
-    //Step 2: Add a new draggable block at the bottom
-    //Step 3: Uncolor the filled lines horizontally and vertically
-    //Step 4: Check if any of the stacked draggable blocks can be fit on the grid. if not finish the game
     int numOfChildBlocks = getUnitBlocksCount(blockType);
-    computeFillableGridBlockPositions(
+
+    //Find the grid block positions where the dragged blocks can be placed
+    List<int> cellsToFill = computeFillableGridBlockPositions(
         numOfChildBlocks, blockType, blockPosition);
 
+    //Color the blocks with the dragged ones
     if (cellsToFill.length == numOfChildBlocks) {
       for (int index in cellsToFill) {
         cellColorsList[index] = blockColor;
@@ -68,14 +94,19 @@ class _GameBoardState extends State<GameBoard> {
         _blockPlacedCallback(blockType);
       }
       setState(() {});
-      Future.delayed(const Duration(milliseconds: 600), clearFilledRows);
+      Future.delayed(const Duration(milliseconds: 200), clearFilledRows);
     }
   }
 
+  //Clear the filled lines horizontally and vertically
   void clearFilledRows() {
     findHorizontallyFilledRows();
     findVerticallyFilledRows();
     if (cellsToClear.isNotEmpty) {
+      if (_rowsClearedCallback != null && matchedRows > 0) {
+        _rowsClearedCallback(matchedRows);
+      }
+      matchedRows = 0;
       for (int counter in cellsToClear) {
         cellColorsList[counter] = emptyCellColor;
       }
@@ -99,6 +130,7 @@ class _GameBoardState extends State<GameBoard> {
         tempList.add(col + row * numOfColumns);
       }
       if (matchedRow >= 0) {
+        matchedRows++;
         cellsToClear.addAll(tempList);
       }
     }
@@ -121,15 +153,16 @@ class _GameBoardState extends State<GameBoard> {
         tempList.add(col);
       }
       if (matchedRow >= 0) {
+        matchedRows++;
         cellsToClear.addAll(tempList);
       }
     }
   }
 
-  void computeFillableGridBlockPositions(
+  List<int> computeFillableGridBlockPositions(
       int numOfChildBlocks, BlockType blockType, Offset droppedBlockPosition) {
     Rect gridBlockRectangle;
-
+    List<int> cellsToFill = <int>[];
     List<Rect> droppedBlockRects =
     getDroppedBlocks(blockType, droppedBlockPosition);
 
@@ -139,12 +172,8 @@ class _GameBoardState extends State<GameBoard> {
       if (cellsToFill.length == numOfChildBlocks) {
         break;
       }
-      for (int col = 0; col < cells.length; col++) {
-        gridBlockRectangle = Rect.fromLTWH(
-            col % numOfColumns * blockUnitSizeWithPadding,
-            col ~/ numOfColumns * blockUnitSizeWithPadding,
-            blockUnitSize,
-            blockUnitSize);
+      for (int col = 0; col < gridBlockRectangleList.length; col++) {
+        gridBlockRectangle = gridBlockRectangleList[col];
 
         if (droppedBlockRect.overlaps(gridBlockRectangle)) {
           Rect intersect = droppedBlockRect.intersect(gridBlockRectangle);
@@ -161,21 +190,12 @@ class _GameBoardState extends State<GameBoard> {
         cellsToFill.add(matchedIndex);
       }
     }
+    return cellsToFill;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (numOfColumns == null) {
-      double screenWidth = MediaQuery.of(context).size.width;
-      numOfColumns = (screenWidth - margin * 4) ~/ blockUnitSizeWithPadding;
-      for (int i = 0; i < numOfColumns * numOfColumns; i++) {
-        cellColorsList.add(emptyCellColor);
-      }
-    }
-    cells.clear();
-    for (int row = 0; row < numOfColumns * numOfColumns; row++) {
-      cells.add(Block(BlockType.SINGLE, cellColorsList[row]));
-    }
+    computeCells();
     return _createGrid();
   }
 
@@ -187,6 +207,36 @@ class _GameBoardState extends State<GameBoard> {
         child: Table(
           children: _createGridCells(),
         ));
+  }
+
+  void computeCells() {
+    if (numOfColumns == null) {
+      double maxDimen = min(MediaQuery
+          .of(context)
+          .size
+          .width,
+          MediaQuery
+              .of(context)
+              .size
+              .height);
+      numOfColumns = (maxDimen - margin * 4) ~/ blockUnitSizeWithPadding;
+      for (int i = 0; i < numOfColumns * numOfColumns; i++) {
+        cellColorsList.add(emptyCellColor);
+      }
+    }
+    cells.clear();
+    for (int row = 0; row < numOfColumns * numOfColumns; row++) {
+      cells.add(Block(BlockType.SINGLE, cellColorsList[row]));
+    }
+
+    gridBlockRectangleList = <Rect>[];
+    for (int col = 0; col < cells.length; col++) {
+      gridBlockRectangleList.add(Rect.fromLTWH(
+          col % numOfColumns * blockUnitSizeWithPadding,
+          col ~/ numOfColumns * blockUnitSizeWithPadding,
+          blockUnitSize,
+          blockUnitSize));
+    }
   }
 
   List<TableRow> _createGridCells() {
@@ -208,33 +258,6 @@ class _GameBoardState extends State<GameBoard> {
       row.add(cells[rowIdx * numOfColumns + col]);
     }
     return row;
-  }
-
-  int getUnitBlocksCount(BlockType blockType) {
-    switch (blockType) {
-      case BlockType.SINGLE:
-        return 1;
-      case BlockType.DOUBLE:
-        return 2;
-      case BlockType.LINE_HORIZONTAL:
-        return 3;
-      case BlockType.LINE_VERTICAL:
-        return 3;
-      case BlockType.SQUARE:
-        return 4;
-      case BlockType.TYPE_T:
-        return 5;
-      case BlockType.TYPE_L:
-        return 4;
-      case BlockType.MIRRORED_L:
-        return 4;
-      case BlockType.TYPE_Z:
-        return 4;
-      case BlockType.TYPE_S:
-        return 4;
-      default:
-        return 0;
-    }
   }
 
   List<Rect> getDroppedBlocks(

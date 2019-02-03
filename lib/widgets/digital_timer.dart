@@ -71,4 +71,8 @@ class DigitalTimer {
       }
     }
   }
+
+  int getDurationInSeconds() {
+    return _durationInSeconds;
+  }
 }
