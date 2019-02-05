@@ -47,10 +47,13 @@ flutter:
   assets:
   - assets/
   - assets/images/ic_award_cup.svg
+  - assets/images/ic_star_light.svg
   - assets/images/ic_star.svg
   - assets/images/ic_like.svg
   - assets/images/ic_facebook.svg
   - assets/images/ic_play.svg
+  - assets/images/ic_replay.svg
+  - assets/images/ic_cart.svg
 
   fonts:
   - family: Fighting Spirit
@@ -61,6 +64,14 @@ flutter:
   - family: HPunk
     fonts:
     - asset: fonts/hpunk.ttf
+
+  - family: Cheri
+    fonts:
+    - asset: fonts/cheri.ttf
+
+  - family: Cherl
+    fonts:
+    - asset: fonts/cherl.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

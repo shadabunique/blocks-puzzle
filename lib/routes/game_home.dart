@@ -7,11 +7,13 @@ import 'package:blocks_puzzle/model/game_session.dart';
 import 'package:blocks_puzzle/widgets/block.dart';
 import 'package:blocks_puzzle/widgets/game_board.dart';
 import 'package:blocks_puzzle/widgets/game_objects.dart';
+import 'package:blocks_puzzle/widgets/game_over.dart';
 import 'package:blocks_puzzle/widgets/game_timer.dart';
 import 'package:blocks_puzzle/widgets/score_board.dart';
 import 'package:blocks_puzzle/widgets/stars_counter.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class GameScreen extends StatefulWidget {
   @override
@@ -34,6 +36,7 @@ class GameScreenState extends State<GameScreen> {
   @override
   void initState() {
     super.initState();
+
     //Build timer
     if (_gameTimer == null) {
       _gameTimer = GameTimer();
@@ -67,7 +70,7 @@ class GameScreenState extends State<GameScreen> {
       padding: EdgeInsets.only(top: 20.0),
       color: screenBgColor,
       child: Column(
-        children: <Widget>[
+        children: [
           Expanded(
             flex: 1,
             child: _buildTopSection(),
@@ -100,7 +103,7 @@ class GameScreenState extends State<GameScreen> {
       alignment: Alignment.center,
       margin: EdgeInsets.all(20.0),
       child: Row(
-        children: <Widget>[
+        children: [
           Expanded(
             flex: 1,
             child: Column(
@@ -111,7 +114,7 @@ class GameScreenState extends State<GameScreen> {
               ],
             ),
           ),
-          _scoreBoard,
+          Expanded(flex: 1, child: _scoreBoard),
           Expanded(
             flex: 1,
             child: InkWell(
@@ -154,6 +157,11 @@ class GameScreenState extends State<GameScreen> {
   void outOfBlocksCallback() {
     _gameTimer?.stop();
     saveSessionStats();
+
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => _createGameOverDialog(context));
   }
 
   void saveSessionStats() async {
@@ -191,5 +199,14 @@ class GameScreenState extends State<GameScreen> {
         _animation = "Play";
       });
     }
+  }
+
+  Widget _createGameOverDialog(BuildContext context) {
+    return WillPopScope(
+        onWillPop: () {},
+        child: Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            child: GameOverPopup()));
   }
 }

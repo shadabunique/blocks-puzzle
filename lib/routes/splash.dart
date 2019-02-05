@@ -148,7 +148,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   _loadScore() async {
     int score = await BlockzSharedPrefs.getInstance().getHighestScore();
-    print("score : $score");
     setState(() {
       _score = score;
     });
@@ -156,7 +155,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   _loadStarsCount() async {
     int starsCount = await BlockzSharedPrefs.getInstance().getTotalStars();
-    print("starsCount:: $starsCount");
     setState(() {
       _starsCount = starsCount;
     });
