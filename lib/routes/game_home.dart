@@ -152,6 +152,11 @@ class GameScreenState extends State<GameScreen> {
     _gameObjects?.onBlockPlaced(blockType);
     _currentScore += getUnitBlocksCount(blockType) * pointsPerBlockUnitPlaced;
     _scoreBoard?.updateScoreboard(_currentScore);
+
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => _createGameOverDialog(context));
   }
 
   void outOfBlocksCallback() {

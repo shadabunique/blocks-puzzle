@@ -14,8 +14,7 @@ class GameOverPopup extends StatefulWidget {
 }
 
 class _GameOverPopupState extends State<GameOverPopup> {
-  int _score = 0;
-  int _starsCount = 0;
+  GameSession _gameSessionStats;
 
   @override
   void initState() {
@@ -62,7 +61,7 @@ class _GameOverPopupState extends State<GameOverPopup> {
             Padding(
                 padding: EdgeInsets.all(10.0),
                 child: Text(
-                  'Score = $_score',
+                  'Score = ${_gameSessionStats?.score}',
                   style: TextStyle(
                       color: Colors.red, fontSize: 24.0, fontFamily: 'Cherl'),
                 )),
@@ -77,12 +76,22 @@ class _GameOverPopupState extends State<GameOverPopup> {
                       height: 28.0,
                     )),
                 Text(
-                  ' X $_starsCount',
+                  ' X ${_gameSessionStats?.starsCollected}',
                   style: TextStyle(
                       color: Colors.red, fontSize: 20.0, fontFamily: 'Cheri'),
                 )
               ],
             ),
+            Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text(
+                  'Time taken : ${_getFormattedTime(
+                      _gameSessionStats?.timeInSeconds)}',
+                  style: TextStyle(
+                      color: Colors.pinkAccent,
+                      fontSize: 20.0,
+                      fontFamily: 'Cherl'),
+                )),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -117,8 +126,7 @@ class _GameOverPopupState extends State<GameOverPopup> {
   _loadGameSession() async {
     GameSession stats = await BlockzSharedPrefs.getInstance().getSessionStats();
     setState(() {
-      _score = stats.score;
-      _starsCount = stats.starsCollected;
+      _gameSessionStats = stats;
     });
   }
 
@@ -127,5 +135,19 @@ class _GameOverPopupState extends State<GameOverPopup> {
   void _restartGame() {
     Navigator.pop(context);
     Navigator.pushReplacementNamed(context, '/home');
+  }
+
+  String _getFormattedTime(int _timeInSeconds) {
+    if (_timeInSeconds == null) {
+      return "";
+    } else {
+      String formattedText = "";
+      int hours = _timeInSeconds ~/ 3600;
+      int minutes = (_timeInSeconds ~/ 60) % 60;
+      int seconds = _timeInSeconds % 60;
+      return hours > 0
+          ? "$hours h $minutes m $seconds s"
+          : minutes > 0 ? "$minutes m $seconds s" : "$seconds s";
+    }
   }
 }
