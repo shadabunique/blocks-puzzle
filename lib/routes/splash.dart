@@ -103,13 +103,14 @@ class _SplashScreenState extends State<SplashScreen> {
                   Navigator.pushReplacementNamed(context, '/home');
                 },
                 child: Container(
+                    width: 80.0,
+                    height: 80.0,
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.yellow,
+                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      color: Colors.lime[100],
                     ),
                     child: SvgPicture.asset(
                       'assets/images/ic_play.svg',
-                      fit: BoxFit.fill,
                     ))),
             Padding(
               padding: EdgeInsets.all(15.0),
