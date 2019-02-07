@@ -4,13 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class GameOverPopup extends StatefulWidget {
-  _GameOverPopupState _gameOverPopupState;
-
   @override
-  State<StatefulWidget> createState() {
-    _gameOverPopupState = _GameOverPopupState();
-    return _gameOverPopupState;
-  }
+  State<StatefulWidget> createState() => _GameOverPopupState();
 }
 
 class _GameOverPopupState extends State<GameOverPopup> {

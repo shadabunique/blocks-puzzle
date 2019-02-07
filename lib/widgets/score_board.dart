@@ -11,7 +11,7 @@ class ScoreBoard extends StatefulWidget {
   }
 
   void updateScoreboard(int score) {
-    _scoreBoardState.updateScoreboard(score);
+    _scoreBoardState?.updateScoreboard(score);
   }
 }
 

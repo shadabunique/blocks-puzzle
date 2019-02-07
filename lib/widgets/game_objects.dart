@@ -14,7 +14,7 @@ class Blocks extends StatefulWidget {
 
   @override
   _BlocksState createState() {
-    _blocksState = _BlocksState(this.blockDroppedCallback);
+    _blocksState = _BlocksState();
     return _blocksState;
   }
 
@@ -28,12 +28,7 @@ class Blocks extends StatefulWidget {
 }
 
 class _BlocksState extends State<Blocks> {
-  final BlockDroppedCallback _blockDroppedCallback;
-
   List<Block> availableBlocks = <Block>[];
-
-  _BlocksState(this._blockDroppedCallback);
-
   List<Block> draggableBlocks = <Block>[];
 
   @override
@@ -42,43 +37,43 @@ class _BlocksState extends State<Blocks> {
 
     availableBlocks.add(Block(BlockType.SINGLE, Colors.lightGreenAccent,
         blockSize: draggableBlockSize,
-        blockDroppedCallback: this._blockDroppedCallback,
+        blockDroppedCallback: widget.blockDroppedCallback,
         draggable: true));
     availableBlocks.add(Block(BlockType.DOUBLE, Colors.lightBlueAccent,
         blockSize: draggableBlockSize,
-        blockDroppedCallback: this._blockDroppedCallback,
+        blockDroppedCallback: widget.blockDroppedCallback,
         draggable: true));
     availableBlocks.add(Block(BlockType.LINE_HORIZONTAL, Colors.redAccent,
         blockSize: draggableBlockSize,
-        blockDroppedCallback: this._blockDroppedCallback,
+        blockDroppedCallback: widget.blockDroppedCallback,
         draggable: true));
     availableBlocks.add(Block(BlockType.LINE_VERTICAL, Colors.brown,
         blockSize: draggableBlockSize,
-        blockDroppedCallback: this._blockDroppedCallback,
+        blockDroppedCallback: widget.blockDroppedCallback,
         draggable: true));
     availableBlocks.add(Block(BlockType.SQUARE, Colors.orangeAccent,
         blockSize: draggableBlockSize,
-        blockDroppedCallback: this._blockDroppedCallback,
+        blockDroppedCallback: widget.blockDroppedCallback,
         draggable: true));
     availableBlocks.add(Block(BlockType.TYPE_T, Colors.indigoAccent,
         blockSize: draggableBlockSize,
-        blockDroppedCallback: this._blockDroppedCallback,
+        blockDroppedCallback: widget.blockDroppedCallback,
         draggable: true));
     availableBlocks.add(Block(BlockType.TYPE_L, Colors.pinkAccent,
         blockSize: draggableBlockSize,
-        blockDroppedCallback: this._blockDroppedCallback,
+        blockDroppedCallback: widget.blockDroppedCallback,
         draggable: true));
     availableBlocks.add(Block(BlockType.MIRRORED_L, Colors.purpleAccent,
         blockSize: draggableBlockSize,
-        blockDroppedCallback: this._blockDroppedCallback,
+        blockDroppedCallback: widget.blockDroppedCallback,
         draggable: true));
     availableBlocks.add(Block(BlockType.TYPE_Z, Colors.amberAccent,
         blockSize: draggableBlockSize,
-        blockDroppedCallback: this._blockDroppedCallback,
+        blockDroppedCallback: widget.blockDroppedCallback,
         draggable: true));
     availableBlocks.add(Block(BlockType.TYPE_S, Colors.tealAccent,
         blockSize: draggableBlockSize,
-        blockDroppedCallback: this._blockDroppedCallback,
+        blockDroppedCallback: widget.blockDroppedCallback,
         draggable: true));
 
     populateDraggableBlocks();

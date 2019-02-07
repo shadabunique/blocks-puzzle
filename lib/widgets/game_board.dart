@@ -20,8 +20,7 @@ class GameBoard extends StatefulWidget {
 
   @override
   _GameBoardState createState() {
-    _gameBoardState = _GameBoardState(this.blockPlacedCallback,
-        this.outOfBlocksCallback, this.rowsClearedCallback);
+    _gameBoardState = _GameBoardState();
     return _gameBoardState;
   }
 
@@ -43,13 +42,6 @@ class _GameBoardState extends State<GameBoard> {
   List<Rect> gridBlockRectangleList;
   int matchedRows = 0;
 
-  final BlockPlacedCallback _blockPlacedCallback;
-  final OutOfBlocksCallback _outOfBlocksCallback;
-  final RowsClearedCallback _rowsClearedCallback;
-
-  _GameBoardState(this._blockPlacedCallback, this._outOfBlocksCallback,
-      this._rowsClearedCallback);
-
   void computeAvailableBlocks(List<Block> availableDraggableBlocks) {
     bool outOfBlocks = true;
     for (Block draggableBlock in availableDraggableBlocks) {
@@ -69,8 +61,8 @@ class _GameBoardState extends State<GameBoard> {
       }
     }
 
-    if (outOfBlocks && _outOfBlocksCallback != null) {
-      _outOfBlocksCallback();
+    if (outOfBlocks && widget.outOfBlocksCallback != null) {
+      widget.outOfBlocksCallback();
     }
   }
 
@@ -90,8 +82,8 @@ class _GameBoardState extends State<GameBoard> {
         cellColorsList[index] = blockColor;
       }
 
-      if (_blockPlacedCallback != null) {
-        _blockPlacedCallback(blockType);
+      if (widget.blockPlacedCallback != null) {
+        widget.blockPlacedCallback(blockType);
       }
       setState(() {});
       Future.delayed(const Duration(milliseconds: 200), clearFilledRows);
@@ -103,8 +95,8 @@ class _GameBoardState extends State<GameBoard> {
     findHorizontallyFilledRows();
     findVerticallyFilledRows();
     if (cellsToClear.isNotEmpty) {
-      if (_rowsClearedCallback != null && matchedRows > 0) {
-        _rowsClearedCallback(matchedRows);
+      if (widget.rowsClearedCallback != null && matchedRows > 0) {
+        widget.rowsClearedCallback(matchedRows);
       }
       matchedRows = 0;
       for (int counter in cellsToClear) {

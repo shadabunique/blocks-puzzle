@@ -17,9 +17,7 @@ import 'package:flutter/widgets.dart';
 
 class GameScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return GameScreenState();
-  }
+  State<StatefulWidget> createState() => GameScreenState();
 }
 
 class GameScreenState extends State<GameScreen> {

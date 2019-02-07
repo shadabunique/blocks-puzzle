@@ -1,4 +1,4 @@
-import 'package:blocks_puzzle/widgets/digital_timer.dart';
+import 'package:blocks_puzzle/model/digital_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -9,19 +9,19 @@ class GameTimer extends StatefulWidget {
   GameTimer({Key key}) : super(key: key);
 
   void start() {
-    _gameTimerState._digitalTimer?.startTimer();
+    _gameTimerState?._digitalTimer?.startTimer();
   }
 
   void stop() {
-    _gameTimerState._digitalTimer?.stopTimer();
+    _gameTimerState?._digitalTimer?.stopTimer();
   }
 
   void pause() {
-    _gameTimerState._digitalTimer?.pauseTimer();
+    _gameTimerState?._digitalTimer?.pauseTimer();
   }
 
   int getTimeDurationInSeconds() {
-    return _gameTimerState._digitalTimer?.getDurationInSeconds();
+    return _gameTimerState?._digitalTimer?.getDurationInSeconds();
   }
 
   @override

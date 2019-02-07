@@ -10,7 +10,6 @@ class Block extends StatefulWidget {
   final Color color;
   final double blockSize;
   final BlockType blockType;
-  _BlockState _blockState;
   final BlockDroppedCallback blockDroppedCallback;
   final bool draggable;
 
@@ -20,18 +19,10 @@ class Block extends StatefulWidget {
         this.blockSize = blockUnitSize});
 
   @override
-  _BlockState createState() {
-    _blockState = _BlockState(this.blockDroppedCallback);
-    return _blockState;
-  }
+  _BlockState createState() => _BlockState();
 }
 
 class _BlockState extends State<Block> {
-  _BlockState(this._blockDroppedCallback);
-
-  BlockDroppedCallback _blockDroppedCallback;
-  Widget block;
-
   @override
   Widget build(BuildContext context) {
     if (widget.draggable) {
@@ -48,8 +39,8 @@ class _BlockState extends State<Block> {
   }
 
   void _handleDragEnded(DraggableDetails draggableDetails) {
-    if (_blockDroppedCallback != null) {
-      this._blockDroppedCallback(
+    if (widget.blockDroppedCallback != null) {
+      widget.blockDroppedCallback(
           widget.blockType, widget.color, draggableDetails.offset);
     }
   }
@@ -60,8 +51,8 @@ class _BlockState extends State<Block> {
         width: _getBlockContainerWidth(blockType),
         height: _getBlockContainerHeight(blockType),
         child: CustomPaint(
-          painter: BlockShaper(
-              shape: blockType, color: color, unitSize: blockSize),
+          painter:
+          BlockShaper(shape: blockType, color: color, unitSize: blockSize),
         ));
   }
 

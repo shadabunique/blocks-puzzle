@@ -11,7 +11,7 @@ class StarsCounter extends StatefulWidget {
   }
 
   void updateStars(int starsCount) {
-    _starsCounterState.updateStars(starsCount);
+    _starsCounterState?.updateStars(starsCount);
   }
 }
 
