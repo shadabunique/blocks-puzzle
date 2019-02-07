@@ -86,7 +86,7 @@ class _GameBoardState extends State<GameBoard> {
         widget.blockPlacedCallback(blockType);
       }
       setState(() {});
-      Future.delayed(const Duration(milliseconds: 200), clearFilledRows);
+      clearFilledRows();
     }
   }
 

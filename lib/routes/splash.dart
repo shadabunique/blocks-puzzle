@@ -92,57 +92,58 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Widget _getCenterView(BuildContext context) {
     return Expanded(
-      flex: 3,
-      child: Container(
-        child: Column(
-          children: [
-            InkWell(
-                highlightColor: Colors.green,
-                splashColor: Colors.white70,
-                onTap: () {
-                  Navigator.pushReplacementNamed(context, '/home');
-                },
-                child: Container(
-                    width: 80.0,
-                    height: 80.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                      color: Colors.lime[100],
-                    ),
-                    child: SvgPicture.asset(
-                      'assets/images/ic_play.svg',
-                    ))),
-            Padding(
-              padding: EdgeInsets.all(15.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                    width: 80.0,
-                    height: 80.0,
-                    child: SvgPicture.asset('assets/images/ic_like.svg'),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: Container(
+        flex: 2,
+        child: Container(
+          child: Column(
+            children: [
+              InkWell(
+                  highlightColor: Colors.green,
+                  splashColor: Colors.white70,
+                  onTap: () {
+                    Navigator.pushReplacementNamed(context, '/home');
+                  },
+                  child: Container(
                       width: 80.0,
                       height: 80.0,
                       decoration: BoxDecoration(
-                          color: Colors.tealAccent,
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        color: Colors.lime[100],
+                      ),
+                      child: SvgPicture.asset(
+                        'assets/images/ic_play.svg',
+                      ))),
+              Padding(
+                padding: EdgeInsets.all(15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.green,
                           borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                      child: SvgPicture.asset('assets/images/ic_facebook.svg'),
+                      width: 80.0,
+                      height: 80.0,
+                      child: SvgPicture.asset('assets/images/ic_like.svg'),
                     ),
-                  ),
-                ],
-              ),
-            ), //),
-          ],
-        ),
-      ),
-    );
+                    Padding(
+                      padding: EdgeInsets.all(5.0),
+                      child: Container(
+                        width: 80.0,
+                        height: 80.0,
+                        decoration: BoxDecoration(
+                            color: Colors.tealAccent,
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(5.0))),
+                        child:
+                        SvgPicture.asset('assets/images/ic_facebook.svg'),
+                      ),
+                    ),
+                  ],
+                ),
+              ), //),
+            ],
+          ),
+        ));
   }
 
   _loadScore() async {
