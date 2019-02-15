@@ -13,6 +13,10 @@ class StarsCounter extends StatefulWidget {
   void updateStars(int starsCount) {
     _starsCounterState?.updateStars(starsCount);
   }
+
+  Offset getPosition() {
+    return _starsCounterState?.getPosition();
+  }
 }
 
 class _StarsCounterState extends State<StarsCounter> {
@@ -56,5 +60,10 @@ class _StarsCounterState extends State<StarsCounter> {
     setState(() {
       _starsCount = starsCount;
     });
+  }
+
+  Offset getPosition() {
+    RenderBox renderbox = context.findRenderObject();
+    return renderbox.localToGlobal(Offset.zero);
   }
 }

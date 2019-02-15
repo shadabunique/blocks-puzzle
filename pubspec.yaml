@@ -54,6 +54,7 @@ flutter:
   - assets/images/ic_play.svg
   - assets/images/ic_replay.svg
   - assets/images/ic_cart.svg
+  - assets/images/ic_glittering_star.svg
 
   fonts:
   - family: Fighting Spirit

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:blocks_puzzle/animations/stars_collection_animation.dart';
 import 'package:blocks_puzzle/common/shared_prefs.dart';
 import 'package:blocks_puzzle/common/utils.dart';
 import 'package:blocks_puzzle/model/game_session.dart';
@@ -30,6 +31,7 @@ class GameScreenState extends State<GameScreen> {
   ScoreBoard _scoreBoard;
   int _currentScore = 0;
   int _starsCollected = 0;
+  StarsCollectionAnimation _starsCollectionAnimation;
 
   @override
   void initState() {
@@ -42,6 +44,7 @@ class GameScreenState extends State<GameScreen> {
 
     _starsCounter = StarsCounter();
     _scoreBoard = ScoreBoard();
+    _starsCollectionAnimation = StarsCollectionAnimation(_starsCounter);
     _buildBottomSection();
 
     //Start the timer after 400 ms
@@ -67,20 +70,25 @@ class GameScreenState extends State<GameScreen> {
     return Container(
       padding: EdgeInsets.only(top: 20.0),
       color: screenBgColor,
-      child: Column(
+      child: Stack(
         children: [
-          Expanded(
-            flex: 1,
-            child: _buildTopSection(),
+          Column(
+            children: [
+              Expanded(
+                flex: 1,
+                child: _buildTopSection(),
+              ),
+              Expanded(
+                flex: 3,
+                child: _buildGameBoard(),
+              ),
+              Expanded(
+                flex: 1,
+                child: _gameObjects,
+              ),
+            ],
           ),
-          Expanded(
-            flex: 3,
-            child: _buildGameBoard(),
-          ),
-          Expanded(
-            flex: 1,
-            child: _gameObjects,
-          )
+          Center(child: _starsCollectionAnimation)
         ],
       ),
     );
@@ -181,6 +189,7 @@ class GameScreenState extends State<GameScreen> {
   void rowsClearedCallback(int numOfRows) {
     _starsCollected += numOfRows * pointsPerMatchedRow;
     _starsCounter?.updateStars(_starsCollected);
+    _starsCollectionAnimation?.showAnimation();
   }
 
   void _updateGameState() {
