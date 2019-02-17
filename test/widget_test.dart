@@ -6,7 +6,6 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:blocks_puzzle/main.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -15,8 +14,8 @@ void main() {
     await tester.pumpWidget(BlocksPuzzleApp());
 
     // Verify that our counter starts at 0.
-    expect(find.text('0:0:0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('🅱🅻🅾🅲🅺🆉'), findsOneWidget);
+    /* expect(find.text('1'), findsNothing);
 
     // Tap the '+' icon and trigger a frame.
     await tester.tap(find.byWidgetPredicate((Widget widget) {
@@ -27,6 +26,6 @@ void main() {
 
     // Verify that our counter has incremented.
     expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('1'), findsOneWidget);*/
   });
 }
