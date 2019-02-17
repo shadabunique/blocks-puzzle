@@ -9,46 +9,43 @@ import 'package:blocks_puzzle/widgets/block.dart';
 import 'package:blocks_puzzle/widgets/game_board.dart';
 import 'package:blocks_puzzle/widgets/game_objects.dart';
 import 'package:blocks_puzzle/widgets/game_over.dart';
+import 'package:blocks_puzzle/widgets/game_pause.dart';
 import 'package:blocks_puzzle/widgets/game_timer.dart';
+import 'package:blocks_puzzle/widgets/play_pause.dart';
 import 'package:blocks_puzzle/widgets/score_board.dart';
 import 'package:blocks_puzzle/widgets/stars_counter.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class GameScreen extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => GameScreenState();
-}
-
-class GameScreenState extends State<GameScreen> {
+class GameScreen extends StatelessWidget {
   GameTimer _gameTimer;
   Blocks _gameObjects;
   GameBoard _gameBoard;
-  String _animation = "Idle_pause";
-  bool _isPlaying = true;
   StarsCounter _starsCounter;
   ScoreBoard _scoreBoard;
+  PlayPause _playPauseButton;
   int _currentScore = 0;
   int _starsCollected = 0;
   StarsCollectionAnimation _starsCollectionAnimation;
 
-  @override
-  void initState() {
-    super.initState();
-
-    //Build timer
-    if (_gameTimer == null) {
-      _gameTimer = GameTimer();
-    }
+  GameScreen() {
+    _gameTimer = GameTimer();
+    _playPauseButton = PlayPause(
+      onGameStateChanged,
+    );
 
     _starsCounter = StarsCounter();
     _scoreBoard = ScoreBoard();
-    _starsCollectionAnimation = StarsCollectionAnimation(_starsCounter);
+    _starsCollectionAnimation = StarsCollectionAnimation();
     _buildBottomSection();
 
     //Start the timer after 400 ms
     Timer.periodic(Duration(milliseconds: 400), (Timer t) => _onTimerTick(t));
+    Timer.periodic(
+        Duration(milliseconds: 100),
+            (Timer t) =>
+            _starsCollectionAnimation
+                .updateTargetPosition(_starsCounter.getPosition()));
   }
 
   void _onTimerTick(Timer t) {
@@ -123,12 +120,7 @@ class GameScreenState extends State<GameScreen> {
           Expanded(flex: 1, child: _scoreBoard),
           Expanded(
             flex: 1,
-            child: InkWell(
-                onTap: _updateGameState,
-                child: FlareActor("assets/PlayPauseWithStates.flr",
-                    alignment: Alignment.center,
-                    fit: BoxFit.contain,
-                    animation: _animation)),
+            child: _playPauseButton,
           )
         ],
       ),
@@ -160,7 +152,7 @@ class GameScreenState extends State<GameScreen> {
     _scoreBoard?.updateScoreboard(_currentScore);
   }
 
-  void outOfBlocksCallback() {
+  void outOfBlocksCallback(BuildContext context) {
     _gameTimer?.stop();
     saveSessionStats();
 
@@ -192,22 +184,6 @@ class GameScreenState extends State<GameScreen> {
     _starsCollectionAnimation?.showAnimation();
   }
 
-  void _updateGameState() {
-    if (_isPlaying) {
-      _isPlaying = false;
-      _gameTimer?.pause();
-      setState(() {
-        _animation = "Pause";
-      });
-    } else {
-      _gameTimer?.start();
-      _isPlaying = true;
-      setState(() {
-        _animation = "Play";
-      });
-    }
-  }
-
   Widget _createGameOverDialog(BuildContext context) {
     return WillPopScope(
         onWillPop: () {},
@@ -215,5 +191,34 @@ class GameScreenState extends State<GameScreen> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0)),
             child: GameOverPopup()));
+  }
+
+  void onGameStateChanged(BuildContext context, GameState state) {
+    switch (state) {
+      case GameState.PAUSE:
+        _gameTimer?.pause();
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) => _createGamePauseDialog(context));
+        break;
+      case GameState.PLAY:
+        _gameTimer?.start();
+        break;
+    }
+  }
+
+  Widget _createGamePauseDialog(BuildContext context) {
+    return WillPopScope(
+        onWillPop: () {},
+        child: Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            child: GamePausePopup(playCallback: _startPlaying)));
+  }
+
+  void _startPlaying() {
+    _gameTimer?.start();
+    _playPauseButton.play();
   }
 }

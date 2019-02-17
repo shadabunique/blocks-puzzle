@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 
 class GameOverPopup extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _GameOverPopupState();
+  _GameOverPopupState createState() => _GameOverPopupState();
 }
 
 class _GameOverPopupState extends State<GameOverPopup> {

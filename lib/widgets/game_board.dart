@@ -62,7 +62,7 @@ class _GameBoardState extends State<GameBoard> {
     }
 
     if (outOfBlocks && widget.outOfBlocksCallback != null) {
-      widget.outOfBlocksCallback();
+      widget.outOfBlocksCallback(context);
     }
   }
 

@@ -2,7 +2,6 @@ import 'package:blocks_puzzle/model/digital_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-///Timer that shows up the game progress
 class GameTimer extends StatefulWidget {
   _GameTimerState _gameTimerState;
 

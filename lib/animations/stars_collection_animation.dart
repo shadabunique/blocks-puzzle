@@ -1,19 +1,11 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'dart:async';
 
 import 'package:blocks_puzzle/widgets/star_award.dart';
-import 'package:blocks_puzzle/widgets/stars_counter.dart';
 import 'package:flutter/material.dart';
 
 class StarsCollectionAnimation extends StatefulWidget {
-  final StarsCounter starsCounter;
   _StarsCollectionAnimationState _starsCollectionAnimationState;
   bool isVisible = false;
-
-  StarsCollectionAnimation(this.starsCounter);
 
   @override
   _StarsCollectionAnimationState createState() {
@@ -24,6 +16,10 @@ class StarsCollectionAnimation extends StatefulWidget {
   void showAnimation() {
     isVisible = true;
     _starsCollectionAnimationState?.startAnimation();
+  }
+
+  void updateTargetPosition(Offset position) {
+    _starsCollectionAnimationState?.updateTargetPosition(position);
   }
 }
 
@@ -78,8 +74,12 @@ class _StarsCollectionAnimationState extends State<StarsCollectionAnimation>
   void getWidgetPositions() {
     setState(() {
       sourcePosition = starAward.getPosition();
-      targetPosition = widget.starsCounter.getPosition();
+      //targetPosition = widget.starsCounter.getPosition();
     });
+  }
+
+  void updateTargetPosition(Offset position) {
+    targetPosition = position;
   }
 
   @override

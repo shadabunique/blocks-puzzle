@@ -12,8 +12,13 @@ const int pointsPerMatchedRow = 10;
 const int pointsPerBlockUnitPlaced = 1;
 
 typedef BlockPlacedCallback = void Function(BlockType blockType);
-typedef OutOfBlocksCallback = void Function();
+typedef OutOfBlocksCallback = void Function(BuildContext context);
 typedef RowsClearedCallback = void Function(int numOfLines);
+typedef PlayCallback = void Function();
+typedef GameStateCallback = void Function(
+    BuildContext context, GameState state);
+
+enum GameState { PLAY, PAUSE }
 
 int getUnitBlocksCount(BlockType blockType) {
   switch (blockType) {

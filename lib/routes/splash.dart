@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _SplashScreenState();
+  _SplashScreenState createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
@@ -131,7 +131,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         width: 80.0,
                         height: 80.0,
                         decoration: BoxDecoration(
-                            color: Colors.tealAccent,
+                            color: Colors.green[100],
                             borderRadius:
                             BorderRadius.all(Radius.circular(5.0))),
                         child:
