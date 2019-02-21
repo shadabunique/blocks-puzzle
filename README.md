@@ -4,10 +4,10 @@ A Flutter based game demonstrating the use of different widgets e.g Draggable
 
 **Splash screen**
 
-![Launcher screen](https://user-images.githubusercontent.com/4103388/53134412-e72f1880-352b-11e9-82b0-940b44b01884.png)
+![Launcher screen](https://user-images.githubusercontent.com/4103388/53134600-a8e62900-352c-11e9-8fc6-3e321df4a017.png)
 
 
 
 **Game screen**
 
-![Game screen](https://user-images.githubusercontent.com/4103388/53134383-cc5ca400-352b-11e9-9327-6495b324a13e.png)
+![Game screen](https://user-images.githubusercontent.com/4103388/53134610-b4395480-352c-11e9-937a-8344114cb216.png)
