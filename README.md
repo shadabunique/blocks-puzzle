@@ -1,6 +1,6 @@
-# Blocks Puzzle
+# Blockz
 
-A Flutter based game demonstrating the use of different widgets e.g Draggable
+A Flutter based blocks puzzle game demonstrating the use of different widgets, Flare and other animations
 
 **Splash screen**
 
