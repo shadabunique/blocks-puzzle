@@ -27,12 +27,16 @@ class _PlayPauseState extends State<PlayPause> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-        onTap: toggleState,
-        child: FlareActor("assets/PlayPauseWithStates.flr",
-            alignment: Alignment.center,
-            fit: BoxFit.contain,
-            animation: _animationState));
+    return Material(
+      color: Colors.transparent,
+      shadowColor: Colors.grey[100],
+      child: InkWell(
+          onTap: toggleState,
+          child: FlareActor("assets/PlayPauseWithStates.flr",
+              alignment: Alignment.center,
+              fit: BoxFit.contain,
+              animation: _animationState)),
+    );
   }
 
   void toggleState() {

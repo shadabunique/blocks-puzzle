@@ -68,17 +68,19 @@ class _GameTimerState extends State<GameTimer> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(8.0),
-      child: Text(
-        getFormattedTime(),
-        style: TextStyle(
-            color: Colors.green,
-            fontSize: 24.0,
-            fontStyle: FontStyle.normal,
-            fontFamily: 'HPunk'),
-      ),
-    );
+    return Material(
+        color: Colors.transparent,
+        child: Container(
+          padding: EdgeInsets.all(8.0),
+          child: Text(
+            getFormattedTime(),
+            style: TextStyle(
+                color: Colors.green,
+                fontSize: 24.0,
+                fontStyle: FontStyle.normal,
+                fontFamily: 'HPunk'),
+          ),
+        ));
   }
 
   String getFormattedTime() {

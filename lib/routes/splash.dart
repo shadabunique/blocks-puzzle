@@ -1,5 +1,4 @@
 import 'package:blocks_puzzle/common/shared_prefs.dart';
-import 'package:blocks_puzzle/common/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -22,14 +21,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _createSplashLayout(context),
-    );
+    return _createSplashLayout(context);
   }
 
   Widget _createSplashLayout(BuildContext context) {
     return Container(
-      color: screenBgColor,
       child: Column(
         children: [
           _getHeaderView(),
@@ -83,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen> {
       child: Container(
         margin: EdgeInsets.all(20.0),
         child: Text(
-          "🅱🅻🅾🅲🅺🆉",
+          '\u{1F171}\u{1F17B}\u{1F17E}\u{1F172}\u{1F17A}\u{1F189}',
           style: TextStyle(color: Colors.white, fontSize: 32.0),
         ),
       ),

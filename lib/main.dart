@@ -1,3 +1,4 @@
+import 'package:blocks_puzzle/common/utils.dart';
 import 'package:blocks_puzzle/routes/game_home.dart';
 import 'package:blocks_puzzle/routes/splash.dart';
 import 'package:blocks_puzzle/widgets/game_over.dart';
@@ -17,7 +18,10 @@ class BlocksPuzzleApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
-      home: SplashScreen(),
+      home: Scaffold(
+        backgroundColor: screenBgColor,
+        body: SplashScreen(),
+      ),
       routes: <String, WidgetBuilder>{
         '/splash': (BuildContext context) => SplashScreen(),
         '/home': (BuildContext context) => GameScreen(),

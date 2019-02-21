@@ -54,19 +54,11 @@ class GameScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: _buildGameWidget(),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => _buildGameWidget();
 
   Widget _buildGameWidget() {
     return Container(
       padding: EdgeInsets.only(top: 20.0),
-      color: screenBgColor,
       child: Stack(
         children: [
           Column(

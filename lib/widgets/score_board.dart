@@ -25,25 +25,27 @@ class _ScoreBoardState extends State<ScoreBoard> {
 
   //Top section includes timer, scoreboard
   Widget _buildScoreBoard() {
-    return Padding(
-      padding: EdgeInsets.all(5.0),
-      child: Column(
-        children: [
-          SvgPicture.asset(
-            'assets/images/ic_award_cup.svg',
-            width: 48.0,
-            height: 48.0,
+    return Material(
+        color: Colors.transparent,
+        child: Padding(
+          padding: EdgeInsets.all(5.0),
+          child: Column(
+            children: [
+              SvgPicture.asset(
+                'assets/images/ic_award_cup.svg',
+                width: 48.0,
+                height: 48.0,
+              ),
+              Text(
+                '$_currentScore',
+                style: TextStyle(
+                    color: Colors.deepPurpleAccent,
+                    fontSize: 28.0,
+                    fontFamily: 'HPunk'),
+              )
+            ],
           ),
-          Text(
-            '$_currentScore',
-            style: TextStyle(
-                color: Colors.deepPurpleAccent,
-                fontSize: 28.0,
-                fontFamily: 'HPunk'),
-          )
-        ],
-      ),
-    );
+        ));
   }
 
   void updateScoreboard(int score) {
